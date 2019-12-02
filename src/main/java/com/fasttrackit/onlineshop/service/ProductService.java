@@ -22,7 +22,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product CreateProduct(SaveProductRequest request) {
+    public Product createProduct(SaveProductRequest request) {
         LOGGER.info("Creating product {}",request);
         Product product = new Product();
         product.setDescription(request.getDescription());
