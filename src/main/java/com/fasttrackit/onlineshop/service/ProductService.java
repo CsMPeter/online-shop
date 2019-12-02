@@ -37,7 +37,7 @@ public class ProductService {
 
     }
 
-    public Product getProduct(long id){
+    public Product getProduct(long id)  {
         LOGGER.info("Retrieving product {]", id);
 
 //        using optional
@@ -45,7 +45,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product" + id + "does not exist."));
     }
 
-    public Product updateProduct(long id, SaveProductRequest request){
+    public Product updateProduct(long id, SaveProductRequest request)  {
         LOGGER.info("Updating product {}: {}", id, request);
 
         Product product = getProduct(id);

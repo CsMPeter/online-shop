@@ -55,12 +55,12 @@ public class ProductServiceIntegrationTests {
         assertThat(product.getDescription(), is(createdProduct.getDescription()));
     }
     @Test(expected = ResourceNotFoundException.class)
-    public void testGetProduct_whenNonExistingProduct_thenThrowResourceNotFoundException(){
+    public void testGetProduct_whenNonExistingProduct_thenThrowResourceNotFoundException()  {
 	    productService.getProduct(99999999999L);
 
     }
-
-    public void testUpdateProduct_whenValidRequest_thenReturnUpdatedProduct(){
+    @Test
+    public void testUpdateProduct_whenValidRequest_thenReturnUpdatedProduct()  {
 	    Product createdProduct = createProduct();
 
 	    SaveProductRequest request = new SaveProductRequest();
@@ -71,6 +71,23 @@ public class ProductServiceIntegrationTests {
 
         Product updatedProduct = productService.updateProduct(createdProduct.getId(), request);
 
+        assertThat(updatedProduct, notNullValue());
+        assertThat(updatedProduct.getName(), is(request.getName()));
+        assertThat(updatedProduct.getId(),is(createdProduct.getId()) );
+        assertThat(updatedProduct.getPrice(), is(request.getPrice()));
+        assertThat(updatedProduct.getDescription(), is(request.getDescription()));
+        assertThat(updatedProduct.getQuantity(), is(request.getQuantity()));
+
+
+
+    }
+    @Test(expected = ResourceNotFoundException.class)
+    public void testDeleteProduct_whenExistingProduct_thenProductIsDeleted() {
+        Product product = createProduct();
+
+        productService.deleteProduct(product.getId());
+
+        productService.getProduct(product.getId());
     }
 
     private Product createProduct() {
