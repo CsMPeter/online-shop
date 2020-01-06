@@ -3,6 +3,7 @@ package com.fasttrackit.onlineshop;
 import com.fasttrackit.onlineshop.domain.Product;
 import com.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import com.fasttrackit.onlineshop.service.ProductService;
+import com.fasttrackit.onlineshop.steps.ProductSteps;
 import com.fasttrackit.onlineshop.transfer.SaveProductRequest;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,12 @@ public class ProductServiceIntegrationTests {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private ProductSteps productSteps;
+
 	@Test
 	public void testCreateProduct_whenValidRequest_thenProductIsSaved() {
-        createProduct();
+        productSteps.createProduct();
 
     }
 
@@ -43,7 +47,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
    public void testGetProduct_WhenExistingProduct_thenReturnProduct() {
-	    Product createdProduct = createProduct();
+	    Product createdProduct = productSteps.createProduct();
 
         final Product product = productService.getProduct(createdProduct.getId());
 
@@ -61,7 +65,7 @@ public class ProductServiceIntegrationTests {
     }
     @Test
     public void testUpdateProduct_whenValidRequest_thenReturnUpdatedProduct()  {
-	    Product createdProduct = createProduct();
+	    Product createdProduct = productSteps.createProduct();
 
 	    SaveProductRequest request = new SaveProductRequest();
 	    request.setName(createdProduct.getName() + "updated");
@@ -83,31 +87,12 @@ public class ProductServiceIntegrationTests {
     }
     @Test(expected = ResourceNotFoundException.class)
     public void testDeleteProduct_whenExistingProduct_thenProductIsDeleted() {
-        Product product = createProduct();
+        Product product = productSteps.createProduct();
 
         productService.deleteProduct(product.getId());
 
         productService.getProduct(product.getId());
     }
 
-    private Product createProduct() {
-        SaveProductRequest request = new SaveProductRequest();
-        request.setName("Banana" + System.currentTimeMillis());
-        request.setPrice(5.0);
-        request.setQuantity(100);
-        request.setDescription("Healthy food");
-
-        Product createdProduct = productService.createProduct(request);
-
-        assertThat(createdProduct, notNullValue());
-        assertThat(createdProduct.getId(), notNullValue());
-        assertThat(createdProduct.getId(), greaterThan(0L));
-        assertThat(createdProduct.getName(), is(request.getName()));
-        assertThat(createdProduct.getPrice(), is(request.getPrice()));
-        assertThat(createdProduct.getQuantity(), is(request.getQuantity()));
-        assertThat(createdProduct.getDescription(), is(request.getDescription()));
-
-        return createdProduct;
-    }
 
 }

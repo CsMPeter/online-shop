@@ -1,5 +1,7 @@
 package com.fasttrackit.onlineshop.domain;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +22,19 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products = new HashSet<>();
 
+    public void addToCart(Product product){
+//        adding received product to the current cart
+        products.add(product);
+
+//        adding the current cart to the carts set of the received product
+        product.getCarts().add(this);
+    }
+
+    public void removeFromCart(Product product){
+        products.remove(product);
+        product.getCarts().remove(this);
+    }
+
     public Long getId() {
         return id;
     }
@@ -34,6 +49,14 @@ public class Cart {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     @Override
